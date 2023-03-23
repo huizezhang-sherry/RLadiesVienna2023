@@ -1,5 +1,7 @@
 ---
 title: "Switching between space and time: Spatio-temporal analysis with <br> {{< fa earth-oceania >}} cubble {{< fa clock size=fa-xs >}}"
+author: '[{{< fa brands github >}}](https://github.com/huizezhang-sherry/) H. Sherry Zhang [{{< fa brands twitter >}}](https://twitter.com/huizezhangsh)'
+date: "2023-04-25"
 format: 
   revealjs:
     scrollable: true
@@ -803,7 +805,7 @@ ggplot() +
   
   - The slides are made with [Quarto](https://quarto.org/) 
   
-  - All the materials used to prepare the slides are available at [sherryzhang-RLadiesVienna2023.netlify.app](sherryzhang-RLadiesVienna2023.netlify.app)
+  - All the materials used to prepare the slides are available at [sherryzhang-rladiesvienna2023.netlify.app](sherryzhang-rladiesvienna2023.netlify.app)
   
 ```{r eval = FALSE}
 # script for diagram 
