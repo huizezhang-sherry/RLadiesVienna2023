@@ -1,0 +1,863 @@
+---
+title: "Switching between space and time: Spatio-temporal analysis with <br> {{< fa earth-oceania >}} cubble {{< fa clock size=fa-xs >}}"
+format: 
+  revealjs:
+    scrollable: true
+    slide-number: true
+    show-slide-number: all
+    aspectratio: 169
+    preview-links: auto
+    theme: [default, style.scss]
+    title-slide-attributes:
+      data-background-image: "figures/rladies-logo.png"
+      data-background-position: "top 0% right 0%"
+      data-background-size: "10%, 10%"
+    multiplex: true
+    chalkboard: true
+---
+
+```{r setup}
+#| include: false  
+library(knitr)
+options(htmltools.dir.version = FALSE)
+opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE, error=FALSE, fig.align = "center")
+
+library(tidyverse)
+library(sf)
+library(ggsvg)
+library(ozmaps)
+library(cubble)
+library(patchwork)
+library(tsibble)
+```
+
+# Hi!
+
+::: columns
+::: {.column width="65%"}
+-   A 3rd year PhD student in the Department of Econometrics and Business Statistics, Monash University, Australia [TODO: some images about Australia]
+
+-   My research centers on exploring multivariate spatio-temporal data with data wrangling and visualisation tool. 
+:::
+
+::: {.column width="35%"}
+```{r}
+knitr::include_graphics(here::here("figures/headshot.jpg"))
+```
+
+
+:::
+:::
+
+:::footer
+[https://huizezhangsh.netlify.app/](https://huizezhangsh.netlify.app/)
+:::
+
+## Roadmap
+
+::: columns
+:::{.column width="35%"}
+```{r}
+knitr::include_graphics(here::here("figures/roadmap.png"))
+```
+:::
+
+:::{.column width="7%"}
+:::
+
+
+:::{.column width="57%"}
+
+:::{.incremental}
+
+* Follow along with the slides at [https://sherryzhang-rladiesvienna2023.netlify.app](https://sherryzhang-rladiesvienna2023.netlify.app/)
+
+<br>
+
+* Go to the [slide repo](https://github.com/huizezhang-sherry/RLadiesVienna2023) to run the code in the `index.R` yourself
+:::
+:::
+
+:::
+
+:::{.notes}
+After some introduction, I will first talk about spatial data with the sf package and then temporal data with the tsibble package before
+:::
+
+## Spatio-temporal data
+
+People can talk about a whole range of differnt things when they only refer to their data as spatio-temporal! 
+
+```{r}
+stations_sf <- cubble::climate_subset %>% select(-ts) %>% 
+  sf::st_as_sf(coords = c("long", "lat"), crs = 4283, remove = FALSE)
+
+oz <- ozmaps::abs_ste %>% filter(NAME != "Other Territories")
+oz_simp <- oz %>% rmapshaper::ms_simplify(keep = 0.05) 
+
+stations <- ggplot() +
+  geom_sf(data = oz_simp, fill = "grey95", color = "white") +
+  geom_point(data = stations_sf, aes(long,lat)) + 
+  ggthemes::theme_map() + 
+  ggtitle("Vector")
+
+raster <- GGally::nasa %>% 
+  filter(year == 1995) %>% 
+  ggplot(aes(x = long, y = lat, fill = temperature)) + 
+  geom_raster() + 
+  theme_bw() +  
+  theme(aspect.ratio = 1, legend.position = "none") + 
+  ggtitle("Raster")
+
+trajectory <- dplyr::storms %>% 
+  filter(status == "hurricane") %>% 
+  ggplot(aes(x = long, y = lat, group = interaction(name, year))) + 
+  geom_path(size = 0.5) + 
+  theme_bw() + 
+  ggtitle("Trajectory") 
+```
+
+```{r}
+stations | raster | trajectory
+```
+
+
+The focus of today will be on vector data
+
+::: {.notes}
+Data with different spatial and temporal characteristics can all sit under the big umbrella of spatio-temporal data.
+
+Here we have three different types: vector, raster, trajectory data (explain each)
+
+vector data have time series measured at a collection of locations
+
+raster data use gridded cells to represent a continuous space and each cell has variables measured at different time point. You can think of it as take snapshots of space at various time points and stack them on top of each other
+
+trajectory data, on the other hand, have points moving in the space and time in the same time. Here each point on these line would have a different long, lat and time marker.
+
+These are three different representation of spatio-temporal data and they have their own tools for wrangling and visualisation
+
+That's why I always feel
+
+:::
+
+## Examples of vector data
+
+Physical sensors that measure the temperature, rainfall, wind speed & direction, water level, etc
+
+```{r}
+svg <- readLines(here::here("figures/sun-svgrepo-com.svg"))
+sun_svg <- paste(svg, collapse = "\n")
+svg <- readLines(here::here("figures/rain-svgrepo-com.svg"))
+rain_svg <- paste(svg, collapse = "\n")
+svg <- readLines(here::here("figures/wind-svgrepo-com.svg"))
+wind_svg <- paste(svg, collapse = "\n")
+svg <- readLines(here::here("figures/river-svgrepo-com.svg"))
+river_svg <- paste(svg, collapse = "\n")
+p1 <- svg_to_rasterGrob(sun_svg)
+p2 <- svg_to_rasterGrob(rain_svg)
+p3 <- svg_to_rasterGrob(wind_svg)
+p4 <- svg_to_rasterGrob(river_svg)
+white <- ggplot() + theme_void()
+gridExtra::grid.arrange(p1, white , p2, white, p3, white, p4, nrow = 1)
+```
+
+:::footer
+A recent [blog post](https://r-spatial.org//r/2022/09/12/vdc.html) on Vector Data Cubes by Edzer Pebesma
+:::
+
+:::{.notes}
+A major source of vector spatio-temporal data is physical sensors that measures a range of climate variables
+
+With these data, typically you will get the spatial data by choosing a list of stations of your interest and then query the temporal data.
+
+Now we will first talk about the spatial component before moving to the temporal component.
+
+:::
+
+## Represent spatial data in R?
+
+-   A pair of longitude/ latitude (`stations_dt`)
+```{r}
+dt <- stations_sf %>% head(2)
+```
+
+```{r}
+options(pillar.print_max = 2, pillar.print_min = 2)
+stations_sf %>% st_drop_geometry() %>% select(id, long, lat, elev, name, wmo_id)
+```
+
+-   Simple features with `sf` (`stations_sf`)
+```{r}
+stations_sf %>% select(-long, -lat)
+```
+
+```{r}
+options(pillar.print_max = 10, pillar.print_min = 10)
+```
+
+
+:::{.notes}
+There are two ways you can represent spatial data in R. 
+
+The first is to use two separate longitude and latitude columns 
+
+Another way is to use the simple feature representation with the sf package.
+
+
+:::
+
+## Geometrical operations with sf
+
+```{r, out.width="200%"}
+knitr::include_graphics(here::here("figures/geometrical-operations.png"))
+```
+
+:::footer
+[https://r-spatial.github.io/sf/reference/index.html](https://r-spatial.github.io/sf/reference/index.html)
+:::
+
+:::{.notes}
+The benefit of using the sf package is that the package also give you access to many geometrical operations.
+
+Here I have a few examples ..
+
+:::
+
+## Ploting an sf object 
+::: columns
+::: {.column width="43%"}
+```{r echo = TRUE}
+ggplot() + 
+  geom_sf(data = oz_simp) + 
+  geom_sf(data = stations_sf)
+```
+:::
+
+::: {.column width="4%"}
+:::
+
+::: {.column width="53%"}
+```{r echo = TRUE}
+set.seed(1234)
+dt_lbl <- stations_sf %>% arrange(id) %>% sample_n(5)
+ggplot() +
+  geom_sf(
+    data = oz_simp, 
+    fill = "grey95", color = "white") +
+  geom_sf_label(
+    data = dt_lbl, 
+    aes(label = name)) + 
+  ggthemes::theme_map() 
+```
+:::
+:::
+
+:::{.notes}
+Also the `geom_sf` function allow you to supply an sf object and will automatically plot the geometry
+
+The `goem_sf_label` allows you to put the label on the points and there are themes and aesthetics you can use to make the map pretty.
+
+
+:::
+
+## Look into an sf object - POINTS 
+
+```{r echo = TRUE}
+dt # simple feature (sf)
+```
+
+```{r echo = TRUE, results='hide'}
+(pnt_sfc <- dt$geometry) # simple feature column (sfc)
+```
+
+    Geometry set for 2 features 
+    Geometry type: POINT
+    Dimension:     XY
+    Bounding box:  xmin: 150.9291 ymin: -34.3691 xmax: 152.8655 ymax: -31.4336
+    Geodetic CRS:  GDA94
+    POINT (152.8655 -31.4336)
+    POINT (150.9291 -34.3691)
+
+```{r echo = TRUE}
+(pnt_sfg <- pnt_sfc[[1]]) # simple feature geometry (sfg) - POINT
+```
+
+    POINT (152.8655 -31.4336)
+
+::: {.notes}
+
+For beginners, the sf header and the geometry representation could be difficult to work with 
+
+Here are three common prints you may see 
+
+explain what you can read here
+
+It may seem confusing as how can you perform operations on these objects, especially the sfc and the sfg. What is underneath these prints? I will now show you that these representations can all be boiled down to the basic structure you're already familiar with
+:::
+
+## Look into an sf object - POINTS (2)
+
+The point sfg is a paired vector with special class labels
+
+```{r echo = TRUE}
+pnt_sfg # simple feature geometry (sfg) - POINTS
+```
+
+    POINT (152.8655 -31.4336)
+
+```{r echo = TRUE}
+typeof(pnt_sfg) 
+attributes(pnt_sfg)
+unclass(pnt_sfg)
+```
+
+The `POINT (152.8655 -31.4336)` format is called well-known text, which is a human-readable encoding used by `sf`
+
+## Look into an sf object - POINTS (3)
+
+The sfc is a list of sfg with special attributes 
+
+```{r echo = TRUE, results='hide'}
+pnt_sfc # simple feature column (sfc)
+```
+   
+    Geometry set for 1 feature 
+    Geometry type: POINT
+    Dimension:     XY
+    Bounding box:  xmin: 152.8655 ymin: -31.4336 xmax: 152.8655 ymax: -31.4336
+    Geodetic CRS:  GDA94
+    POINT (152.8655 -31.4336)
+    POINT (150.9291 -34.3691)
+
+```{r echo = TRUE}
+typeof(pnt_sfc)
+names(attributes(pnt_sfc))
+```
+
+```{r echo = TRUE, results='hide'}
+unclass(pnt_sfc)[1:2]
+```
+
+    [[1]]
+    POINT (152.8655 -31.4336)
+    
+    [[2]]
+    POINT (150.9291 -34.3691)
+
+## Other geoms (1/3) - LINESTRING
+
+The linestring sfg is a matrix of paired doubles
+
+```{r results = "hide"}
+ls_sfc <- oz_simp[8,]$geometry %>% st_cast("POLYGON") %>% st_cast("LINESTRING")
+```
+
+```{r echo = TRUE}
+(ls_sfg <- ls_sfc[[1]])
+```
+
+    LINESTRING (149.2317 -35.222, 149.2716 -35.2708, 149.3153 -35.27623, 149.3972 -35.32425, 149.3363 -35.33988, 149.2493 -35.33013, 149.2045 -35.34761, 149.1464 -35.4153, 149.1352, ...)
+    
+```{r echo = TRUE}
+typeof(ls_sfg)
+unclass(ls_sfg)
+```
+
+## Other geoms (2/3) - POLYGONS
+
+POLYGON sfg is a list where each element is a  matrix of paired vectors
+
+```{r results='hide'}
+pol_sfc <- oz_simp[8,]$geometry %>% st_cast("POLYGON")
+```
+
+```{r echo = TRUE}
+(pol_sfg <- pol_sfc[[1]])
+```
+
+    POLYGON ((149.2317 -35.222, 149.2716 -35.2708, 149.3153 -35.27623, 149.3972 -35.32425, 149.3363 -35.33988, 149.2493 -35.33013, ...))
+
+```{r echo = TRUE}
+typeof(pol_sfg)
+unclass(pol_sfg)
+```
+
+## And lastly ...  MULTIPOLYGONS!
+
+MULTIPOLYGON sfg is a nested list where each list element can contain multiple matrices of paired vectors
+
+```{r }
+mpol_sfc <- rmapshaper::ms_simplify(oz_simp[2,]$geometry, keep = 0.4)
+```
+
+```{r echo = TRUE}
+(mpol_sfg <- mpol_sfc[[1]])
+```
+
+    MULTIPOLYGON (((145.2859 -38.3962, 145.2903 -38.28367, 145.4109 -38.37078, 145.2859 -38.3962)), ((140.9657 -38.05599, 140.9739 -37.46209, 140.9693 -36.79305, 140.9631 -35.74853, 140.9656 -35.00826, 140.9617 -34.09582, ...)))
+
+```{r echo = TRUE}
+typeof(mpol_sfg)
+length(unclass(mpol_sfg))
+unclass(mpol_sfg)
+```
+
+## Geometry types - summary
+
+-  The `sf`, `sfc`, and `sfg` objects have informative header prints but they can be boiled down to basic data structures that we're already familiar with
+
+- There are more than just introduced geometry types: MULTIPOINTS, MULTILINESTRING, etc
+
+- In practice, you don't have to decompose/ manipulate these vectors or matrices manually, existing geometrical operations (`st_*()`) and visualisation tools (`geom_sf()`) will do that for you.
+
+<!-- an animation "|>" to next slide? -->
+
+## Geometrical operations with sf again
+
+<!-- Make a draw of various geometrical operations st_intersection() vs. st_intersects() st_combine() vs. st_union() -->
+
+```{r, out.width="200%"}
+knitr::include_graphics(here::here("figures/geometrical-operations.png"))
+```
+
+:::footer
+[https://r-spatial.github.io/sf/reference/index.html](https://r-spatial.github.io/sf/reference/index.html)
+:::
+
+# Aggregate time series with tsibble
+
+## Time series of weather station data
+
+```{r eval = FALSE}
+ts <- cubble::climate_subset %>% 
+  face_temporal() %>% 
+  filter(!is.na(tmax), !is.na(tmin)) %>% 
+  as_tibble()
+save(ts, file = here::here("data/ts.rda"))
+```
+
+```{r}
+load(here::here("data/ts.rda"))
+```
+
+```{r}
+#| echo: true
+ts %>% 
+  ggplot(aes(x = date, y = tmax, group = id)) + 
+  geom_line(alpha = 0.6) + 
+  theme_bw()
+```
+
+:::{.notes}
+For the 30 stations I have shown you before, we also have daily information on precipitation, maximum and minimum temperature.
+
+Here I plot the maximum temperature of each station in 2020 and because it is daily data, these lines are quite wiggly.
+:::
+
+
+## How's the data quality from BOM? {.smaller}
+
+First cast the data into a tsibble, before using `tsibble::count_gaps()` for data quality check
+
+::: columns
+::: {.column width="45%"}
+```{r echo = TRUE}
+ts
+```
+:::
+
+::: {.column width="5%"}
+:::
+
+::: {.column width="50%"}
+```{r echo = TRUE}
+library(tsibble)
+(ts_tsibble <- ts %>% 
+   as_tsibble(key = id, index = date))
+```
+
+:::
+:::
+
+:::{.notes}
+The data are downloaded from the Bureau of Meteorology and are structued in a long table 
+
+[introduce data]
+
+We would like to know about the data quatlity before proceed to any analysis and the tsibble package has a function `count_gaps()` for that.
+
+The `count_gaps()` function requires the data to be a tsibble object, so we first need to create a tsibble from our data.
+
+[explain creation]
+
+:::
+
+## How's the data quality from BOM? 
+
+```{r}
+options(pillar.print_max = 5, pillar.print_min = 5)
+```
+
+```{r echo = TRUE}
+(missings <- ts_tsibble %>% tsibble::count_gaps())
+```
+
+```{r echo = TRUE, eval = FALSE}
+missings <- missings %>% group_by(id) %>% mutate(ttl_n = sum(.n))
+missings %>% 
+  ggplot() + 
+  geom_errorbar(aes(xmin = .from, xmax = .to, y = fct_reorder(id, ttl_n)), 
+                width = 0.2) + 
+  theme_bw() + 
+  scale_x_date(date_breaks = "1 month", date_labels = "%b") + 
+  ylab("Station ID")
+```
+
+:::{.notes}
+
+Then we can pipe the created tsibble into `count_gaps` and the output of it is a separate table summary 
+
+Here the first chunk of missing is for station 3057, from 02-17 to 02-18, for two days
+
+We can plot these missing gaps with geom errorbar. 
+
+In this code, I order the stations from the one has the most total missing to the least
+:::
+
+
+## How's the data quality from BOM?
+
+```{r}
+missings <- missings %>% group_by(id) %>% mutate(ttl_n = sum(.n))
+missings %>%
+  ggplot() +
+  geom_errorbar(
+    aes(xmin = .from, xmax = .to,
+        y = fct_reorder(id, ttl_n)),
+    width = 0.2) +
+  theme_bw() +
+  scale_x_date(date_breaks = "1 month", date_labels = "%b") +
+  ylab("Station ID")
+```
+
+:::{.notes}
+Despite some small missingness for a day or two here and there, overall, these stations don't have a long period of missing.
+
+The only few that we may need to be cautious are ...
+
+Bear in mind that not all of the stations are automatic, someone needs to go to the station everyday 9 am to write down these numbers, so this amount of missingness is acceptable to me
+
+:::
+
+## Make the inexplicit NAs explicit {.smaller}
+
+::: columns
+::: {.column width="50%"}
+```{r echo = TRUE}
+single <- ts_tsibble %>% 
+  filter(id == "ASN00003057")
+single_filled <- single %>% 
+  tsibble::fill_gaps()
+```
+
+```{r echo = TRUE}
+single %>% 
+  filter(date >= "2020-02-15") 
+
+single_filled %>% 
+  filter(date >= "2020-02-15")
+```
+```{r}
+options(pillar.print_max = 7, pillar.print_min = 7)
+```
+
+:::
+
+::: {.column width="50%"}
+```{r}
+knitr::include_graphics(here::here("figures/explicit-na.png"))
+```
+
+:::
+:::
+
+:::{.notes}
+Sometimes, the missingness is not explicitly stated
+
+We can inspect to see there is a jump from teh 16th to the 19th but the data do not speak for itself.
+
+These inexplicit NAs can bring in some unexpected error in your calculation that you're not even aware of. For example, 
+
+Without explicitly register the two missing dates, we will calculating using the four rows directly above the 19th of Feb and here it will be from 13th to 16th.
+
+while if the missingness is properly registered, we will be using the correct dates on the calculation. 
+
+The `fill_gaps()` functions from the tsibble package can populate the time into a complete grid and register the missing cells with NAs
+
+:::
+
+# Space and time at the same time with cubble
+
+## Goal of today: glyph map
+
+```{r}
+cb <- as_cubble(
+  list(spatial = stations_sf, temporal = ts),
+  key = id, index = date, coords = c(long, lat)
+)
+
+set.seed(0927)
+cb_glyph <- cb %>% 
+  slice_sample(n = 20) %>% 
+  face_temporal() %>% 
+  group_by(month = lubridate::month(date)) %>% 
+  summarise(tmax = mean(tmax, na.rm = TRUE)) %>% 
+  unfold(long, lat)
+
+ggplot() + 
+  geom_sf(data = oz_simp, fill = "grey95", color = "white") +
+  geom_glyph(
+    data = cb_glyph,
+    aes(x_major = long, x_minor = month, y_major = lat, y_minor = tmax),
+    width = 2, height = 0.7) + 
+  ggthemes::theme_map() 
+```
+
+:::{.notes}
+One of today's goals is for everyone to make a glyph map similar to this by the end of the session. 
+
+We need a data structure to manpulate the data in space and in time, the data manipulation part. 
+
+We also need a way to draw the small multiples on the map, the visualisation part.
+
+:::
+
+
+## Cubble - a spatio-temporal vector data structure 
+
+```{r}
+knitr::include_graphics(here::here("figures/cubble-operations.png"))
+```
+
+:::footer
+[https://huizezhang-sherry.github.io/cubble/articles/cubble-design.html](https://huizezhang-sherry.github.io/cubble/articles/cubble-design.html)
+:::
+
+:::{.notes}
+For the wrangling part, I will use the cubble package 
+
+A cubble has two forms, a nested form where all the temporal data is nested in a list column, just as how the geometry is a list column in the sf package.
+
+This form can be used for calculation on the space or make per station summary from the time series
+
+Another form is called the long form, which will elaborate the time series data in the long form and temporaily hide the spatial data. 
+
+With the long form, you can make some temporal summary of the data.
+
+Here the illustration shows you how to turn a nested cubble into the long form with `face_temporal()` and backward with `face_spatial()`.
+
+
+:::
+
+
+## Cast your data into a cubble 
+
+```{r echo = TRUE}
+(cb <- as_cubble(
+  list(spatial = stations_sf, temporal = ts),
+  key = id, index = date, coords = c(long, lat)
+))
+```
+
+:::{.notes}
+There are different ways you can create a cubble. 
+
+If you have the spatial and temporal data in two separate tables, you can supply them as a list. 
+
+Then you need to specify some parameters. The key and index are the same as how you would construct a tsibble 
+
+And cubble requires an additional `coords` parameter for coordinates.
+
+This is how the created cubble looks like
+:::
+
+
+## Subset on space 
+
+```{r echo = TRUE}
+set.seed(0927)
+cb_space <- cb %>% slice_sample(n = 20)
+```
+
+
+```{r}
+ggplot() +
+  geom_sf(data = oz_simp, fill = "grey95", color = "white") +
+  geom_point(data = cb, aes(long,lat), color = "grey80") + 
+  geom_point(data = cb_space, aes(long, lat), color = "#4758AB") + 
+  ggthemes::theme_map() 
+```
+
+## Summarise in time 
+
+```{r echo = TRUE}
+(cb_tm <- cb_space %>% 
+  face_temporal() %>% 
+  group_by(month = lubridate::month(date)) %>% 
+  summarise(tmax = mean(tmax, na.rm = TRUE))
+  )
+```
+
+## Move coordinates into time 
+
+```{r echo = TRUE}
+(cb_glyph <- cb_tm %>% unfold(long, lat))
+```
+
+:::{.notes}
+Now we have longitude and latitude in the nested form and monthly summarised tmax in the long form, the last thing we need to do is to move them into the same table before making the glyph map.
+
+Here you need the verb `unfold`
+:::
+
+
+## Glyph map transformation 
+
+```{r}
+knitr::include_graphics(here::here("figures/glyph-steps.png"))
+```
+
+```{r eval = FALSE, echo = TRUE}
+DATA %>% 
+  ggplot() +
+  geom_glyph(
+    aes(x_major = X_MAJOR, x_minor = X_MINOR, 
+        y_major = Y_MAJOR, y_minor = Y_MINOR)) + 
+  ...
+```
+
+:::footer
+https://huizezhang-sherry.github.io/cubble/articles/glyph.html
+:::
+
+
+:::{.notes}
+The glyphmap is essentially a transformation of temporal variable into space.
+
+Here (1) shows a single station with its long and lat coordinate and (2) is its associated time series. We can use linear algebra to transform the temporal axes into the spatial scale as in (3) and once we have the time series in the transformed axes, they can be placed onto the map as in (4)
+ 
+To make a glyph map, you can use the `geom_glyph` function from cubble. 
+
+It requires a pair of major and a pair of minor variable as aesthetics
+
+The major variable are the spatial coordinates, long and lat here and hte minor variable are the temporal coordinates, date and tmax here.
+
+Here (1) and (2) are 
+:::
+
+
+## Making your first glyph map 
+
+```{r}
+#| code-fold: true
+#| echo: true
+cb <- as_cubble(
+  list(spatial = stations_sf, temporal = ts),
+  key = id, index = date, coords = c(long, lat)
+)
+set.seed(0927)
+cb_glyph <- cb %>% 
+  slice_sample(n = 20) %>% 
+  face_temporal() %>% 
+  group_by(month = lubridate::month(date)) %>% 
+  summarise(tmax = mean(tmax, na.rm = TRUE)) %>% 
+  unfold(long, lat)
+ggplot() + 
+  geom_sf(data = oz_simp, fill = "grey95", color = "white") +
+  geom_glyph(
+    data = cb_glyph,
+    aes(x_major = long, x_minor = month, y_major = lat, y_minor = tmax),
+    width = 2, height = 0.7) + 
+  ggthemes::theme_map()
+```
+
+## Your Time 
+
+1. Create a cubble object from the spatial and temporal data given
+
+2. Perform an operation on the space in the nested form
+
+3. Switch to the long form to summarise the temporal data 
+
+4. Make a glyph map!
+
+## Further reading
+
+  - Spatial Data Science with application to R: [https://r-spatial.org/book/](https://r-spatial.org/book/)
+  - sf: [https://r-spatial.github.io/sf/index.html](https://r-spatial.github.io/sf/index.html)
+  - tsibble: [https://tsibble.tidyverts.org/](https://tsibble.tidyverts.org/)
+  - cubble: [https://huizezhang-sherry.github.io/cubble/](https://huizezhang-sherry.github.io/cubble/)
+
+## Acknowledgements
+  
+  - The slides are made with [Quarto](https://quarto.org/) 
+  
+  - All the materials used to prepare the slides are available at [sherryzhang-RLadiesVienna2023.netlify.app](sherryzhang-RLadiesVienna2023.netlify.app)
+  
+```{r eval = FALSE}
+# script for diagram 
+library(tidyverse)
+library(patchwork)
+nsw <- ozmaps::abs_ste %>% filter(NAME %in% c("New South Wales")) %>% rmapshaper::ms_simplify()
+
+single <- climate_aus %>% filter(id == "ASN00076031")
+glyph_dt <- single %>% face_temporal() %>% unfold(long, lat) %>% mutate(tmax = ifelse(is.na(tmax), lead(tmax, 2), tmax))
+p1 <- ggplot() + 
+  geom_sf(data = nsw,fill = "transparent", linetype = "dotted")+ 
+  geom_point(data = single, aes(x = long, y = lat)) + 
+  theme_bw() + 
+  coord_sf(xlim = c(141, 143), ylim = c(-35, -33.5)) + 
+  scale_x_continuous(breaks = seq(140, 143, 1)) + 
+  scale_y_continuous(breaks = seq(-35, -33, 1)) + 
+  ggtitle("(1)")
+
+p2 <- single %>% 
+  face_temporal() %>% 
+  ggplot(aes(x = date, y = tmax)) + 
+  geom_line(alpha = 0.8) + 
+  theme_bw() + 
+  theme() + 
+  ggtitle("(2)")
+
+glyph <- glyph_dt %>% 
+  ggplot(aes(x_major = long, x_minor = as.numeric(date),
+             y_major = lat, y_minor = tmax)) + 
+  geom_glyph(width = 1, height = 0.3)
+
+p3 <- layer_data(glyph) %>% 
+  ggplot(aes(x = x, y = y)) + 
+  geom_line(alpha = 0.8) +
+  theme_bw() + 
+  theme(axis.line = element_line(color = "#840032"),
+        axis.text = element_text(color = "#840032", size = 10),
+  ) + 
+  ggtitle("(3)") + xlab("long") + ylab("lat")
+
+p4 <- glyph_dt %>% 
+  ggplot(aes(x_major = long, x_minor = as.numeric(date),
+             y_major = lat, y_minor = tmax)) + 
+  geom_sf(data = nsw, fill = "transparent", linetype = "dotted", inherit.aes = FALSE) + 
+  geom_glyph(width = 1, height = 0.3, alpha = 0.8) + 
+  theme_bw() + 
+  coord_sf(xlim = c(141, 143), ylim = c(-35, -33.5)) + 
+  scale_x_continuous(breaks = seq(140, 143, 1)) + 
+  scale_y_continuous(breaks = seq(-35, -33, 1)) + 
+  ggtitle("(4)") + xlab("long") + ylab("lat")
+
+g2 <- (p1 | p2) / (p4 | p3) + plot_layout(guides='collect') &
+  theme(legend.position='none')
+
+ggsave(g2, filename = here::here("figures/glyph-steps.png"), height = 4)
+```
+
