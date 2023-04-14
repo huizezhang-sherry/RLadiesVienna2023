@@ -1364,23 +1364,23 @@ POINT (150.9291 -34.3691)</code></pre>
 <h2>Cast your data into a cubble</h2>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb60"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1"></a>(cb <span class="ot">&lt;-</span> <span class="fu">as_cubble</span>(</span>
-<span id="cb60-2"><a href="#cb60-2"></a>  <span class="fu">list</span>(<span class="at">spatial =</span> stations_sf, <span class="at">temporal =</span> ts),</span>
-<span id="cb60-3"><a href="#cb60-3"></a>  <span class="at">key =</span> id, <span class="at">index =</span> date, <span class="at">coords =</span> <span class="fu">c</span>(long, lat)</span>
+<span id="cb60-2"><a href="#cb60-2"></a>  <span class="fu">list</span>(<span class="at">spatial =</span> stations, <span class="at">temporal =</span> ts),</span>
+<span id="cb60-3"><a href="#cb60-3"></a>  <span class="at">key =</span> id, <span class="at">index =</span> time, <span class="at">coords =</span> <span class="fu">c</span>(long, lat)</span>
 <span id="cb60-4"><a href="#cb60-4"></a>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code># cubble:   id [30]: nested form [sf]
-# bbox:     [114.09, -41.88, 152.87, -11.65]
-# temporal: date [date], prcp [dbl], tmax [dbl], tmin [dbl]
-  id            lat  long  elev name   wmo_id            geometry ts      
-  &lt;chr&gt;       &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;   &lt;dbl&gt;         &lt;POINT [°]&gt; &lt;list&gt;  
-1 ASN00003057 -16.5  123.   7   cygne…  94201 (123.0086 -16.4514) &lt;tibble&gt;
-2 ASN00005007 -22.2  114.   5   learm…  94302 (114.0967 -22.2406) &lt;tibble&gt;
-3 ASN00005084 -21.5  115.   5   theve…  94303 (115.0197 -21.4606) &lt;tibble&gt;
-4 ASN00010515 -32.1  117. 199   bever…  95615 (116.9247 -32.1083) &lt;tibble&gt;
-5 ASN00012314 -27.8  121. 497   leins…  95448 (120.7031 -27.8386) &lt;tibble&gt;
-6 ASN00014401 -11.7  133.  19.2 warru…  94139 (133.3796 -11.6502) &lt;tibble&gt;
-7 ASN00014703 -15.7  137.  12.2 centr…  94248 (136.8192 -15.7426) &lt;tibble&gt;
-# … with 23 more rows</code></pre>
+<pre><code># cubble:   id [144]: nested form
+# bbox:     [9.6, 46.44, 17.04, 48.96]
+# temporal: station [dbl], time [dttm], tmax [dbl]
+     id name             long   lat altitude ts                
+  &lt;dbl&gt; &lt;chr&gt;           &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt; &lt;list&gt;            
+1   500 LITSCHAU         15.0  49.0      558 &lt;tibble [730 × 3]&gt;
+2   905 RETZ/WINDMUEHLE  15.9  48.8      320 &lt;tibble [730 × 3]&gt;
+3  1401 KOLLERSCHLAG     13.8  48.6      714 &lt;tibble [730 × 3]&gt;
+4  1415 ROHRBACH         14.0  48.6      597 &lt;tibble [287 × 3]&gt;
+5  1416 ROHRBACH         14.0  48.6      613 &lt;tibble [443 × 3]&gt;
+6  1802 WEITRA           14.9  48.7      572 &lt;tibble [730 × 3]&gt;
+7  1906 ALLENTSTEIG      15.4  48.7      599 &lt;tibble [730 × 3]&gt;
+# … with 137 more rows</code></pre>
 </div>
 </div>
 <aside class="notes">
@@ -1404,8 +1404,7 @@ POINT (150.9291 -34.3691)</code></pre>
 <section id="subset-on-space" class="slide level2">
 <h2>Subset on space</h2>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1"></a><span class="fu">set.seed</span>(<span class="dv">0927</span>)</span>
-<span id="cb62-2"><a href="#cb62-2"></a>cb_space <span class="ot">&lt;-</span> cb <span class="sc">%&gt;%</span> <span class="fu">slice_sample</span>(<span class="at">n =</span> <span class="dv">20</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1"></a>cb_space <span class="ot">&lt;-</span> cb <span class="sc">%&gt;%</span> <span class="fu">filter</span>(<span class="fu">nrow</span>(ts) <span class="sc">==</span> <span class="dv">365</span> <span class="sc">*</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 
 <img data-src="index_files/figure-revealjs/unnamed-chunk-48-1.png" width="960" class="r-stretch quarto-figure-center"></section>
@@ -1414,24 +1413,23 @@ POINT (150.9291 -34.3691)</code></pre>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb63"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1"></a>(cb_tm <span class="ot">&lt;-</span> cb_space <span class="sc">%&gt;%</span> </span>
 <span id="cb63-2"><a href="#cb63-2"></a>  <span class="fu">face_temporal</span>() <span class="sc">%&gt;%</span> </span>
-<span id="cb63-3"><a href="#cb63-3"></a>  <span class="fu">group_by</span>(<span class="at">month =</span> lubridate<span class="sc">::</span><span class="fu">month</span>(date)) <span class="sc">%&gt;%</span> </span>
+<span id="cb63-3"><a href="#cb63-3"></a>  <span class="fu">group_by</span>(<span class="at">month =</span> lubridate<span class="sc">::</span><span class="fu">month</span>(time)) <span class="sc">%&gt;%</span> </span>
 <span id="cb63-4"><a href="#cb63-4"></a>  <span class="fu">summarise</span>(<span class="at">tmax =</span> <span class="fu">mean</span>(tmax, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span>
 <span id="cb63-5"><a href="#cb63-5"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code># cubble:  month, id [20]: long form
-# bbox:    [114.09, -41.65, 152.72, -11.65]
-# spatial: lat [dbl], long [dbl], elev [dbl], name [chr], wmo_id [dbl],
-#   geometry [POINT [°]]
-  id          month  tmax
-  &lt;chr&gt;       &lt;dbl&gt; &lt;dbl&gt;
-1 ASN00005007     1  38.8
-2 ASN00005007     2  37.5
-3 ASN00005007     3  38.1
-4 ASN00005007     4  35.8
-5 ASN00005007     5  28.6
-6 ASN00005007     6  26.6
-7 ASN00005007     7  27.4
-# … with 233 more rows</code></pre>
+<pre><code># cubble:  month, id [140]: long form
+# bbox:    [9.6, 46.44, 16.85, 48.96]
+# spatial: name [chr], long [dbl], lat [dbl], altitude [dbl]
+     id month  tmax
+  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+1   500     1  2.53
+2   500     2  5.63
+3   500     3  8.67
+4   500     4 11.2 
+5   500     5 18.0 
+6   500     6 25.0 
+7   500     7 24.9 
+# … with 1,673 more rows</code></pre>
 </div>
 </div>
 </section>
@@ -1440,20 +1438,19 @@ POINT (150.9291 -34.3691)</code></pre>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb65"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1"></a>(cb_glyph <span class="ot">&lt;-</span> cb_tm <span class="sc">%&gt;%</span> <span class="fu">unfold</span>(long, lat))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code># cubble:  month, id [20]: long form
-# bbox:    [114.09, -41.65, 152.72, -11.65]
-# spatial: lat [dbl], long [dbl], elev [dbl], name [chr], wmo_id [dbl],
-#   geometry [POINT [°]]
-  id          month  tmax  long   lat
-  &lt;chr&gt;       &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-1 ASN00005007     1  38.8  114. -22.2
-2 ASN00005007     2  37.5  114. -22.2
-3 ASN00005007     3  38.1  114. -22.2
-4 ASN00005007     4  35.8  114. -22.2
-5 ASN00005007     5  28.6  114. -22.2
-6 ASN00005007     6  26.6  114. -22.2
-7 ASN00005007     7  27.4  114. -22.2
-# … with 233 more rows</code></pre>
+<pre><code># cubble:  month, id [140]: long form
+# bbox:    [9.6, 46.44, 16.85, 48.96]
+# spatial: name [chr], long [dbl], lat [dbl], altitude [dbl]
+     id month  tmax  long   lat
+  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+1   500     1  2.53  15.0  49.0
+2   500     2  5.63  15.0  49.0
+3   500     3  8.67  15.0  49.0
+4   500     4 11.2   15.0  49.0
+5   500     5 18.0   15.0  49.0
+6   500     6 25.0   15.0  49.0
+7   500     7 24.9   15.0  49.0
+# … with 1,673 more rows</code></pre>
 </div>
 </div>
 <aside class="notes">
@@ -1509,24 +1506,31 @@ POINT (150.9291 -34.3691)</code></pre>
 <div class="cell" data-layout-align="center">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb68"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1"></a>cb <span class="ot">&lt;-</span> <span class="fu">as_cubble</span>(</span>
-<span id="cb68-2"><a href="#cb68-2"></a>  <span class="fu">list</span>(<span class="at">spatial =</span> stations_sf, <span class="at">temporal =</span> ts),</span>
-<span id="cb68-3"><a href="#cb68-3"></a>  <span class="at">key =</span> id, <span class="at">index =</span> date, <span class="at">coords =</span> <span class="fu">c</span>(long, lat)</span>
-<span id="cb68-4"><a href="#cb68-4"></a>)</span>
-<span id="cb68-5"><a href="#cb68-5"></a><span class="fu">set.seed</span>(<span class="dv">0927</span>)</span>
-<span id="cb68-6"><a href="#cb68-6"></a>cb_glyph <span class="ot">&lt;-</span> cb <span class="sc">%&gt;%</span> </span>
-<span id="cb68-7"><a href="#cb68-7"></a>  <span class="fu">slice_sample</span>(<span class="at">n =</span> <span class="dv">20</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb68-8"><a href="#cb68-8"></a>  <span class="fu">face_temporal</span>() <span class="sc">%&gt;%</span> </span>
-<span id="cb68-9"><a href="#cb68-9"></a>  <span class="fu">group_by</span>(<span class="at">month =</span> lubridate<span class="sc">::</span><span class="fu">month</span>(date)) <span class="sc">%&gt;%</span> </span>
-<span id="cb68-10"><a href="#cb68-10"></a>  <span class="fu">summarise</span>(<span class="at">tmax =</span> <span class="fu">mean</span>(tmax, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)) <span class="sc">%&gt;%</span> </span>
-<span id="cb68-11"><a href="#cb68-11"></a>  <span class="fu">unfold</span>(long, lat)</span>
-<span id="cb68-12"><a href="#cb68-12"></a><span class="fu">ggplot</span>() <span class="sc">+</span> </span>
-<span id="cb68-13"><a href="#cb68-13"></a>  <span class="fu">geom_sf</span>(<span class="at">data =</span> oz_simp, <span class="at">fill =</span> <span class="st">"grey95"</span>, <span class="at">color =</span> <span class="st">"white"</span>) <span class="sc">+</span></span>
-<span id="cb68-14"><a href="#cb68-14"></a>  <span class="fu">geom_glyph</span>(</span>
-<span id="cb68-15"><a href="#cb68-15"></a>    <span class="at">data =</span> cb_glyph,</span>
-<span id="cb68-16"><a href="#cb68-16"></a>    <span class="fu">aes</span>(<span class="at">x_major =</span> long, <span class="at">x_minor =</span> month, <span class="at">y_major =</span> lat, <span class="at">y_minor =</span> tmax),</span>
-<span id="cb68-17"><a href="#cb68-17"></a>    <span class="at">width =</span> <span class="dv">2</span>, <span class="at">height =</span> <span class="fl">0.7</span>) <span class="sc">+</span> </span>
-<span id="cb68-18"><a href="#cb68-18"></a>  ggthemes<span class="sc">::</span><span class="fu">theme_map</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb68"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1"></a><span class="fu">library</span>(cubble)</span>
+<span id="cb68-2"><a href="#cb68-2"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb68-3"><a href="#cb68-3"></a>stations_raw <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"data/TAG Stations-Metadaten.csv"</span>))</span>
+<span id="cb68-4"><a href="#cb68-4"></a>stations <span class="ot">&lt;-</span> stations_raw <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">3</span><span class="sc">:</span><span class="dv">6</span>)) <span class="sc">%&gt;%</span> <span class="fu">set_names</span>(<span class="fu">c</span>(<span class="st">"id"</span>, <span class="st">"name"</span>, <span class="st">"long"</span>, <span class="st">"lat"</span>, <span class="st">"altitude"</span>))</span>
+<span id="cb68-5"><a href="#cb68-5"></a>ts_raw <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"data/TAG Datensatz_20210101_20221231.csv"</span>))</span>
+<span id="cb68-6"><a href="#cb68-6"></a>ts <span class="ot">&lt;-</span> ts_raw <span class="sc">%&gt;%</span> <span class="fu">set_names</span>(<span class="fu">c</span>(<span class="st">"station"</span>, <span class="st">"time"</span>, <span class="st">"tmax"</span>, <span class="st">"id"</span>)) <span class="sc">%&gt;%</span> <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(id))</span>
+<span id="cb68-7"><a href="#cb68-7"></a>cb <span class="ot">&lt;-</span> <span class="fu">as_cubble</span>(</span>
+<span id="cb68-8"><a href="#cb68-8"></a>  <span class="fu">list</span>(<span class="at">spatial =</span> stations, <span class="at">temporal =</span> ts),</span>
+<span id="cb68-9"><a href="#cb68-9"></a>  <span class="at">key =</span> id, <span class="at">index =</span> time, <span class="at">coords =</span> <span class="fu">c</span>(long, lat)</span>
+<span id="cb68-10"><a href="#cb68-10"></a>)</span>
+<span id="cb68-11"><a href="#cb68-11"></a>cb_glyph <span class="ot">&lt;-</span> cb <span class="sc">%&gt;%</span> </span>
+<span id="cb68-12"><a href="#cb68-12"></a>  <span class="fu">filter</span>(<span class="fu">nrow</span>(ts) <span class="sc">==</span> <span class="dv">365</span> <span class="sc">*</span> <span class="dv">2</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb68-13"><a href="#cb68-13"></a>  <span class="fu">face_temporal</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb68-14"><a href="#cb68-14"></a>  <span class="fu">group_by</span>(<span class="at">month =</span> lubridate<span class="sc">::</span><span class="fu">month</span>(time)) <span class="sc">%&gt;%</span> </span>
+<span id="cb68-15"><a href="#cb68-15"></a>  <span class="fu">summarise</span>(<span class="at">tmax =</span> <span class="fu">mean</span>(tmax, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb68-16"><a href="#cb68-16"></a>  <span class="fu">unfold</span>(long, lat, altitude)</span>
+<span id="cb68-17"><a href="#cb68-17"></a></span>
+<span id="cb68-18"><a href="#cb68-18"></a>austria <span class="ot">&lt;-</span> rnaturalearth<span class="sc">::</span><span class="fu">ne_countries</span>(<span class="at">returnclass =</span> <span class="st">"sf"</span>, <span class="at">scale =</span> <span class="st">"medium"</span>) <span class="sc">%&gt;%</span> <span class="fu">filter</span>(name <span class="sc">==</span> <span class="st">"Austria"</span>) <span class="sc">%&gt;%</span> <span class="fu">pull</span>(geometry)</span>
+<span id="cb68-19"><a href="#cb68-19"></a></span>
+<span id="cb68-20"><a href="#cb68-20"></a>cb_glyph <span class="sc">%&gt;%</span> </span>
+<span id="cb68-21"><a href="#cb68-21"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x_major =</span> long, <span class="at">x_minor =</span> month, <span class="at">y_major =</span> lat, <span class="at">y_minor =</span> tmax, <span class="at">color =</span> altitude ),) <span class="sc">+</span> </span>
+<span id="cb68-22"><a href="#cb68-22"></a>  <span class="fu">geom_sf</span>(<span class="at">data =</span> austria, <span class="at">fill =</span> <span class="st">"grey95"</span>, <span class="at">color =</span> <span class="st">"white"</span>, <span class="at">inherit.aes =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb68-23"><a href="#cb68-23"></a>  <span class="fu">geom_glyph_box</span>(<span class="at">width =</span> <span class="fl">0.2</span>, <span class="at">height =</span> <span class="fl">0.05</span>) <span class="sc">+</span> </span>
+<span id="cb68-24"><a href="#cb68-24"></a>  <span class="fu">geom_glyph</span>(<span class="at">width =</span> <span class="fl">0.2</span>, <span class="at">height =</span> <span class="fl">0.05</span>) <span class="sc">+</span> </span>
+<span id="cb68-25"><a href="#cb68-25"></a>  ggthemes<span class="sc">::</span><span class="fu">theme_map</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 
 </div>
