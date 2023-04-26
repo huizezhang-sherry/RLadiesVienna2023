@@ -12,7 +12,7 @@
   <meta name="generator" content="quarto-1.1.251">
 
   <meta name="author" content=" H. Sherry Zhang ">
-  <meta name="dcterms.date" content="2023-04-25">
+  <meta name="dcterms.date" content="2023-04-26">
   <title>Switching between space and time: Spatio-temporal analysis with    cubble </title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -396,17 +396,24 @@
 <section id="title-slide" data-background-image="figures/rladies-logo.png" data-background-position="top 0% right 0%" data-background-size="10%, 10%" class="center">
   <h1 class="title">Switching between space and time: Spatio-temporal analysis with <br> <i class="fa-solid fa-earth-oceania" aria-hidden="true"></i> cubble <i class="fa-solid fa-clock fa-fa-xs" aria-hidden="true"></i></h1>
   <p class="author"><a href="https://github.com/huizezhang-sherry/"><i class="fa-brands fa-github" aria-hidden="true"></i></a> H. Sherry Zhang <a href="https://twitter.com/huizezhangsh"><i class="fa-brands fa-twitter" aria-hidden="true"></i></a></p>
-  <p class="date">2023-04-25</p>
+  <p class="institute">Monash University</p>
+  <p class="date">2023-04-26</p>
 </section>
 
 <section>
-<section id="hi" class="title-slide slide level1 center">
+<section id="hi" class="title-slide slide level1 smaller center">
 <h1>Hi!</h1>
 <div class="columns">
 <div class="column" style="width:65%;">
 <ul>
-<li><p>A 3rd year PhD student in the Department of Econometrics and Business Statistics, Monash University, Australia [TODO: some images about Australia]</p></li>
+<li><p>A 3rd year PhD student in the Department of Econometrics and Business Statistics, Monash University, Australia</p></li>
 <li><p>My research centers on exploring multivariate spatio-temporal data with data wrangling and visualisation tool.</p></li>
+<li><p>Find me on</p>
+<ul>
+<li>Twitter: <code>huizezhangsh</code>,</li>
+<li>GitHub: <code>huizezhang-sherry</code>, and</li>
+<li><a href="https://huizezhangsh.netlify.app/" class="uri">https://huizezhangsh.netlify.app/</a></li>
+</ul></li>
 </ul>
 </div><div class="column" style="width:35%;">
 <div class="cell" data-layout-align="center">
@@ -421,37 +428,13 @@
 </div>
 </div>
 <div class="footer">
-<p><a href="https://huizezhangsh.netlify.app/">https://huizezhangsh.netlify.app/</a></p>
+<p><a href="https://huizezhangsh.netlify.app/" class="uri">https://huizezhangsh.netlify.app/</a></p>
 </div>
 </section>
 <section id="roadmap" class="slide level2">
 <h2>Roadmap</h2>
-<div class="columns">
-<div class="column" style="width:35%;">
-<div class="cell" data-layout-align="center">
-<div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure>
-<p><img data-src="figures/roadmap.png" width="458"></p>
-</figure>
-</div>
-</div>
-</div>
-</div><div class="column" style="width:7%;">
 
-</div><div class="column" style="width:57%;">
-<div>
-<ul>
-<li class="fragment">Follow along with the slides at <a href="https://sherryzhang-rladiesvienna2023.netlify.app/">https://sherryzhang-rladiesvienna2023.netlify.app</a></li>
-</ul>
-<p><br></p>
-<ul>
-<li class="fragment">Go to the <a href="https://github.com/huizezhang-sherry/RLadiesVienna2023">slide repo</a> to run the code in the <code>index.R</code> yourself</li>
-</ul>
-</div>
-</div>
-</div>
-<aside class="notes">
+<img data-src="figures/roadmap.png" width="458" class="r-stretch quarto-figure-center"><aside class="notes">
 <p>After some introduction, I will first talk about spatial data with the sf package and then temporal data with the tsibble package before</p>
 <style type="text/css">
         span.MJX_Assistive_MathML {
@@ -617,11 +600,11 @@ Geodetic CRS:  GDA94
 <span id="cb4-3"><a href="#cb4-3"></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
 <span id="cb4-4"><a href="#cb4-4"></a>  <span class="fu">geom_sf</span>(</span>
 <span id="cb4-5"><a href="#cb4-5"></a>    <span class="at">data =</span> oz_simp, </span>
-<span id="cb4-6"><a href="#cb4-6"></a>    <span class="at">fill =</span> <span class="st">"grey95"</span>, <span class="at">color =</span> <span class="st">"white"</span>) <span class="sc">+</span></span>
+<span id="cb4-6"><a href="#cb4-6"></a>    <span class="at">fill =</span> <span class="st">"grey90"</span>, <span class="at">color =</span> <span class="st">"white"</span>) <span class="sc">+</span></span>
 <span id="cb4-7"><a href="#cb4-7"></a>  <span class="fu">geom_sf_label</span>(</span>
 <span id="cb4-8"><a href="#cb4-8"></a>    <span class="at">data =</span> dt_lbl, </span>
 <span id="cb4-9"><a href="#cb4-9"></a>    <span class="fu">aes</span>(<span class="at">label =</span> name)) <span class="sc">+</span> </span>
-<span id="cb4-10"><a href="#cb4-10"></a>  ggthemes<span class="sc">::</span><span class="fu">theme_map</span>() </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb4-10"><a href="#cb4-10"></a>  ggthemes<span class="sc">::</span><span class="fu">theme_map</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure>
@@ -1058,15 +1041,6 @@ POINT (150.9291 -34.3691)</code></pre>
 <li><p>There are more than just introduced geometry types: MULTIPOINTS, MULTILINESTRING, etc</p></li>
 <li><p>In practice, you don’t have to decompose/ manipulate these vectors or matrices manually, existing geometrical operations (<code>st_*()</code>) and visualisation tools (<code>geom_sf()</code>) will do that for you.</p></li>
 </ul>
-<!-- an animation "|>" to next slide? -->
-</section>
-<section id="geometrical-operations-with-sf-again" class="slide level2">
-<h2>Geometrical operations with sf again</h2>
-<!-- Make a draw of various geometrical operations st_intersection() vs. st_intersects() st_combine() vs. st_union() -->
-
-<img data-src="figures/geometrical-operations.png" style="width:200.0%" class="r-stretch quarto-figure-center"><div class="footer">
-<p><a href="https://r-spatial.github.io/sf/reference/index.html">https://r-spatial.github.io/sf/reference/index.html</a></p>
-</div>
 </section></section>
 <section>
 <section id="aggregate-time-series-with-tsibble" class="title-slide slide level1 center">
@@ -1088,7 +1062,7 @@ POINT (150.9291 -34.3691)</code></pre>
 <span id="cb47-4"><a href="#cb47-4"></a>  <span class="fu">theme_bw</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 
 </div>
-<img data-src="index_files/figure-revealjs/unnamed-chunk-33-1.png" width="960" class="r-stretch quarto-figure-center"><aside class="notes">
+<img data-src="index_files/figure-revealjs/unnamed-chunk-32-1.png" width="960" class="r-stretch quarto-figure-center"><aside class="notes">
 <p>For the 30 stations I have shown you before, we also have daily information on precipitation, maximum and minimum temperature.</p>
 <p>Here I plot the maximum temperature of each station in 2020 and because it is daily data, these lines are quite wiggly.</p>
 <style type="text/css">
@@ -1221,7 +1195,7 @@ POINT (150.9291 -34.3691)</code></pre>
 <section id="hows-the-data-quality-from-bom-2" class="slide level2">
 <h2>How’s the data quality from BOM?</h2>
 
-<img data-src="index_files/figure-revealjs/unnamed-chunk-39-1.png" width="960" class="r-stretch quarto-figure-center"><aside class="notes">
+<img data-src="index_files/figure-revealjs/unnamed-chunk-38-1.png" width="960" class="r-stretch quarto-figure-center"><aside class="notes">
 <p>Despite some small missingness for a day or two here and there, overall, these stations don’t have a long period of missing.</p>
 <p>The only few that we may need to be cautious are …</p>
 <p>Bear in mind that not all of the stations are automatic, someone needs to go to the station everyday 9 am to write down these numbers, so this amount of missingness is acceptable to me</p>
@@ -1314,15 +1288,194 @@ POINT (150.9291 -34.3691)</code></pre>
 <section>
 <section id="space-and-time-at-the-same-time-with-cubble" class="title-slide slide level1 center">
 <h1>Space and time at the same time with cubble</h1>
+<div class="cell" data-layout-align="center">
 
+</div>
 </section>
-<section id="goal-of-today-glyph-map" class="slide level2">
-<h2>Goal of today: glyph map</h2>
+<section id="motivation" class="slide level2">
+<h2>Motivation</h2>
+<div class="columns">
+<div class="column">
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="figures/sf-df.png" width="562"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="figures/sf-logo.gif"></p>
+</figure>
+</div>
+</div>
+</div>
+</div><div class="column">
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="figures/tsibble-df.png" style="height:80.0%" width="554"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="figures/tsibble-logo.svg" style="width:30.0%;height:30.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</div>
 
-<img data-src="index_files/figure-revealjs/unnamed-chunk-44-1.png" width="960" class="r-stretch quarto-figure-center"><aside class="notes">
-<p>One of today’s goals is for everyone to make a glyph map similar to this by the end of the session.</p>
-<p>We need a data structure to manpulate the data in space and in time, the data manipulation part.</p>
-<p>We also need a way to draw the small multiples on the map, the visualisation part.</p>
+<!-- -   In a long table with duplicated spatial variables? That would give a lot of duplication if daily data & large spatial objects. -->
+<!-- -   Sometimes, we would like to make per station summary, ideally, each station forms a row. -->
+<!-- -   Other time, we would like to work on temporal variables in the long form. -->
+<!-- -   A lot of padding work to arrange the spatio-temporal data in the format convenient for spatial & temporal operations! -->
+<aside class="notes">
+<p>If you have worked with spatial data in R, you will probably know about the sf package. In an oversimplified term, the package uses nested list to wrap up coordinates into a special column, geom. The package also connects to external libraries that allow us to do geospatial operations.</p>
+<p>On the other hand, we have tsibble that arranges time series data into a long form with explicit column for the time variable.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="weather-station-data" class="slide level2 smaller">
+<h2>Weather station data</h2>
+<div class="columns">
+<div class="column" style="width:60%;">
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1"></a>stations</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 144 × 5
+     id name                 long   lat altitude
+  &lt;dbl&gt; &lt;chr&gt;               &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;
+1 13401 KAPFENBERG-FLUGFELD  15.3  47.5      515
+2  2117 HORN -  WASSERWERK   15.6  48.7      308
+3  1416 ROHRBACH             14.0  48.6      613
+4  7956 ANDAU                17.0  47.8      117
+5   500 LITSCHAU             15.0  49.0      558
+6   905 RETZ/WINDMUEHLE      15.9  48.8      320
+7  1415 ROHRBACH             14.0  48.6      597
+# … with 137 more rows</code></pre>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="index_files/figure-revealjs/data-stations-1.png" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+</div><div class="column" style="width:40%;">
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1"></a>ts</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 103,660 × 4
+  station time                 tmax    id
+    &lt;dbl&gt; &lt;dttm&gt;              &lt;dbl&gt; &lt;dbl&gt;
+1     100 2021-01-01 00:00:00   1.7 20123
+2     100 2021-01-02 00:00:00   0.4 20123
+3     100 2021-01-03 00:00:00   2.5 20123
+4     100 2021-01-04 00:00:00   1.4 20123
+5     100 2021-01-05 00:00:00   3.4 20123
+6     100 2021-01-06 00:00:00   2.9 20123
+7     100 2021-01-07 00:00:00   1.2 20123
+# … with 103,653 more rows</code></pre>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="index_files/figure-revealjs/data-ts-1.png" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</div>
+<aside class="notes">
+<p>Initially I was working with climate data where I have 30 weather stations and its spatial information and time series data to record the daily climate variables in 2020. I was trying to use sf to handle the spatial side and tsibble to handle the temporal side. But the two packages do not work well with each other. This is expected since neither sf or tsibble is designed to handle spatio-temporal data.</p>
+<p>This motivates me to think about the spatio-temporal data structure in R.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="whats-available-for-spatio-temporal-data---stars" class="slide level2">
+<h2>What’s available for spatio-temporal data? - stars</h2>
+<div class="columns">
+<div class="column">
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="figures/stars-model.png" style="width:80.0%;height:60.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+</div><div class="column">
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="figures/stars-df.png" width="853"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</div>
+<aside class="notes">
+<p>What’s available at that time is a package called <code>stars</code>, it uses a dense array to structure spatio-temporal data. You can think of it as stacking snapshots of the space along the time axis.</p>
+<p>This is great for satellite data, but it may not be the most obvious solution for analysts who prefer to operate on a 2D table format.</p>
+<p>Hence, I designed a data structure called cubble to handle saptio-temporal vector data.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="cubble-a-spatio-temporal-vector-data-structure" class="slide level2">
+<h2>Cubble: a spatio-temporal vector data structure</h2>
+
+<img data-src="figures/long-nested-form.png" width="960" class="r-stretch quarto-figure-center"><div class="footer">
+<p><a href="https://huizezhang-sherry.github.io/cubble/articles/cubble-design.html" class="uri">https://huizezhang-sherry.github.io/cubble/articles/cubble-design.html</a></p>
+</div>
+<aside class="notes">
+<p>Cubble is a nested object built on tibble that allow easy pivoting between the spatial and temporal form.</p>
+<p>The nested form is similar to the sf data frame you seen before, with an additional list column called ts that nests all the temporal variables</p>
+<p>The long form mimics the long table in tsibble where each row is cross identified by the site and date in a long table</p>
 <style type="text/css">
         span.MJX_Assistive_MathML {
           position:absolute!important;
@@ -1337,6 +1490,7 @@ POINT (150.9291 -34.3691)</code></pre>
 </section>
 <section id="cubble---a-spatio-temporal-vector-data-structure" class="slide level2">
 <h2>Cubble - a spatio-temporal vector data structure</h2>
+<p>Cubble is a nested object built on tibble that allow easy pivoting between spatial and temporal form.</p>
 
 <img data-src="figures/cubble-operations.png" width="1111" class="r-stretch quarto-figure-center"><div class="footer">
 <p><a href="https://huizezhang-sherry.github.io/cubble/articles/cubble-design.html">https://huizezhang-sherry.github.io/cubble/articles/cubble-design.html</a></p>
@@ -1363,10 +1517,10 @@ POINT (150.9291 -34.3691)</code></pre>
 <section id="cast-your-data-into-a-cubble" class="slide level2">
 <h2>Cast your data into a cubble</h2>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1"></a>(cb <span class="ot">&lt;-</span> <span class="fu">as_cubble</span>(</span>
-<span id="cb60-2"><a href="#cb60-2"></a>  <span class="fu">list</span>(<span class="at">spatial =</span> stations, <span class="at">temporal =</span> ts),</span>
-<span id="cb60-3"><a href="#cb60-3"></a>  <span class="at">key =</span> id, <span class="at">index =</span> time, <span class="at">coords =</span> <span class="fu">c</span>(long, lat)</span>
-<span id="cb60-4"><a href="#cb60-4"></a>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1"></a>(cb <span class="ot">&lt;-</span> <span class="fu">as_cubble</span>(</span>
+<span id="cb64-2"><a href="#cb64-2"></a>  <span class="fu">list</span>(<span class="at">spatial =</span> stations, <span class="at">temporal =</span> ts),</span>
+<span id="cb64-3"><a href="#cb64-3"></a>  <span class="at">key =</span> id, <span class="at">index =</span> time, <span class="at">coords =</span> <span class="fu">c</span>(long, lat)</span>
+<span id="cb64-4"><a href="#cb64-4"></a>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># cubble:   id [144]: nested form
 # bbox:     [9.6, 46.44, 17.04, 48.96]
@@ -1404,18 +1558,18 @@ POINT (150.9291 -34.3691)</code></pre>
 <section id="subset-on-space" class="slide level2">
 <h2>Subset on space</h2>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1"></a>cb_space <span class="ot">&lt;-</span> cb <span class="sc">%&gt;%</span> <span class="fu">filter</span>(<span class="fu">nrow</span>(ts) <span class="sc">==</span> <span class="dv">365</span> <span class="sc">*</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb66"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1"></a>cb_space <span class="ot">&lt;-</span> cb <span class="sc">%&gt;%</span> <span class="fu">filter</span>(<span class="fu">nrow</span>(ts) <span class="sc">==</span> <span class="dv">365</span> <span class="sc">*</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 
-<img data-src="index_files/figure-revealjs/unnamed-chunk-48-1.png" width="960" class="r-stretch quarto-figure-center"></section>
+<img data-src="index_files/figure-revealjs/unnamed-chunk-55-1.png" width="960" class="r-stretch quarto-figure-center"></section>
 <section id="summarise-in-time" class="slide level2">
 <h2>Summarise in time</h2>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1"></a>(cb_tm <span class="ot">&lt;-</span> cb_space <span class="sc">%&gt;%</span> </span>
-<span id="cb63-2"><a href="#cb63-2"></a>  <span class="fu">face_temporal</span>() <span class="sc">%&gt;%</span> </span>
-<span id="cb63-3"><a href="#cb63-3"></a>  <span class="fu">group_by</span>(<span class="at">month =</span> lubridate<span class="sc">::</span><span class="fu">month</span>(time)) <span class="sc">%&gt;%</span> </span>
-<span id="cb63-4"><a href="#cb63-4"></a>  <span class="fu">summarise</span>(<span class="at">tmax =</span> <span class="fu">mean</span>(tmax, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span>
-<span id="cb63-5"><a href="#cb63-5"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb67"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1"></a>(cb_tm <span class="ot">&lt;-</span> cb_space <span class="sc">%&gt;%</span> </span>
+<span id="cb67-2"><a href="#cb67-2"></a>  <span class="fu">face_temporal</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb67-3"><a href="#cb67-3"></a>  <span class="fu">group_by</span>(<span class="at">month =</span> lubridate<span class="sc">::</span><span class="fu">month</span>(time)) <span class="sc">%&gt;%</span> </span>
+<span id="cb67-4"><a href="#cb67-4"></a>  <span class="fu">summarise</span>(<span class="at">tmax =</span> <span class="fu">mean</span>(tmax, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb67-5"><a href="#cb67-5"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># cubble:  month, id [140]: long form
 # bbox:    [9.6, 46.44, 16.85, 48.96]
@@ -1436,7 +1590,7 @@ POINT (150.9291 -34.3691)</code></pre>
 <section id="move-coordinates-into-time" class="slide level2">
 <h2>Move coordinates into time</h2>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1"></a>(cb_glyph <span class="ot">&lt;-</span> cb_tm <span class="sc">%&gt;%</span> <span class="fu">unfold</span>(long, lat))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb69"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1"></a>(cb_glyph <span class="ot">&lt;-</span> cb_tm <span class="sc">%&gt;%</span> <span class="fu">unfold</span>(long, lat))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># cubble:  month, id [140]: long form
 # bbox:    [9.6, 46.44, 16.85, 48.96]
@@ -1468,16 +1622,27 @@ POINT (150.9291 -34.3691)</code></pre>
           display:block!important;
       }</style></aside>
 </section>
+<section id="why-do-you-need-a-glyph-map" class="slide level2">
+<h2>Why do you need a glyph map?</h2>
+
+<img data-src="index_files/figure-revealjs/unnamed-chunk-58-1.png" width="960" class="r-stretch quarto-figure-center"><div class="footer">
+<p>Modified from <em>Glyph-maps for Visually Exploring Temporal Patterns in Climate Data and Models</em> (Wickham, 2012)</p>
+</div>
+</section>
+<section id="why-do-you-need-a-glyph-map-1" class="slide level2">
+<h2>Why do you need a glyph map?</h2>
+
+<img data-src="index_files/figure-revealjs/unnamed-chunk-59-1.png" width="960" class="r-stretch quarto-figure-center"></section>
 <section id="glyph-map-transformation" class="slide level2">
 <h2>Glyph map transformation</h2>
 
 <img data-src="figures/glyph-steps.png" width="1354" class="r-stretch quarto-figure-center"><div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb67"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1"></a>DATA <span class="sc">%&gt;%</span> </span>
-<span id="cb67-2"><a href="#cb67-2"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span></span>
-<span id="cb67-3"><a href="#cb67-3"></a>  <span class="fu">geom_glyph</span>(</span>
-<span id="cb67-4"><a href="#cb67-4"></a>    <span class="fu">aes</span>(<span class="at">x_major =</span> X_MAJOR, <span class="at">x_minor =</span> X_MINOR, </span>
-<span id="cb67-5"><a href="#cb67-5"></a>        <span class="at">y_major =</span> Y_MAJOR, <span class="at">y_minor =</span> Y_MINOR)) <span class="sc">+</span> </span>
-<span id="cb67-6"><a href="#cb67-6"></a>  ...</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb71"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1"></a>DATA <span class="sc">%&gt;%</span> </span>
+<span id="cb71-2"><a href="#cb71-2"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb71-3"><a href="#cb71-3"></a>  <span class="fu">geom_glyph</span>(</span>
+<span id="cb71-4"><a href="#cb71-4"></a>    <span class="fu">aes</span>(<span class="at">x_major =</span> X_MAJOR, <span class="at">x_minor =</span> X_MINOR, </span>
+<span id="cb71-5"><a href="#cb71-5"></a>        <span class="at">y_major =</span> Y_MAJOR, <span class="at">y_minor =</span> Y_MINOR)) <span class="sc">+</span> </span>
+<span id="cb71-6"><a href="#cb71-6"></a>  ...</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="footer">
 <p>https://huizezhang-sherry.github.io/cubble/articles/glyph.html</p>
@@ -1506,44 +1671,37 @@ POINT (150.9291 -34.3691)</code></pre>
 <div class="cell" data-layout-align="center">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb68"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1"></a><span class="fu">library</span>(cubble)</span>
-<span id="cb68-2"><a href="#cb68-2"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb68-3"><a href="#cb68-3"></a>stations_raw <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"data/TAG Stations-Metadaten.csv"</span>))</span>
-<span id="cb68-4"><a href="#cb68-4"></a>stations <span class="ot">&lt;-</span> stations_raw <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">3</span><span class="sc">:</span><span class="dv">6</span>)) <span class="sc">%&gt;%</span> <span class="fu">set_names</span>(<span class="fu">c</span>(<span class="st">"id"</span>, <span class="st">"name"</span>, <span class="st">"long"</span>, <span class="st">"lat"</span>, <span class="st">"altitude"</span>))</span>
-<span id="cb68-5"><a href="#cb68-5"></a>ts_raw <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"data/TAG Datensatz_20210101_20221231.csv"</span>))</span>
-<span id="cb68-6"><a href="#cb68-6"></a>ts <span class="ot">&lt;-</span> ts_raw <span class="sc">%&gt;%</span> <span class="fu">set_names</span>(<span class="fu">c</span>(<span class="st">"station"</span>, <span class="st">"time"</span>, <span class="st">"tmax"</span>, <span class="st">"id"</span>)) <span class="sc">%&gt;%</span> <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(id))</span>
-<span id="cb68-7"><a href="#cb68-7"></a>cb <span class="ot">&lt;-</span> <span class="fu">as_cubble</span>(</span>
-<span id="cb68-8"><a href="#cb68-8"></a>  <span class="fu">list</span>(<span class="at">spatial =</span> stations, <span class="at">temporal =</span> ts),</span>
-<span id="cb68-9"><a href="#cb68-9"></a>  <span class="at">key =</span> id, <span class="at">index =</span> time, <span class="at">coords =</span> <span class="fu">c</span>(long, lat)</span>
-<span id="cb68-10"><a href="#cb68-10"></a>)</span>
-<span id="cb68-11"><a href="#cb68-11"></a>cb_glyph <span class="ot">&lt;-</span> cb <span class="sc">%&gt;%</span> </span>
-<span id="cb68-12"><a href="#cb68-12"></a>  <span class="fu">filter</span>(<span class="fu">nrow</span>(ts) <span class="sc">==</span> <span class="dv">365</span> <span class="sc">*</span> <span class="dv">2</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb68-13"><a href="#cb68-13"></a>  <span class="fu">face_temporal</span>() <span class="sc">%&gt;%</span> </span>
-<span id="cb68-14"><a href="#cb68-14"></a>  <span class="fu">group_by</span>(<span class="at">month =</span> lubridate<span class="sc">::</span><span class="fu">month</span>(time)) <span class="sc">%&gt;%</span> </span>
-<span id="cb68-15"><a href="#cb68-15"></a>  <span class="fu">summarise</span>(<span class="at">tmax =</span> <span class="fu">mean</span>(tmax, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)) <span class="sc">%&gt;%</span> </span>
-<span id="cb68-16"><a href="#cb68-16"></a>  <span class="fu">unfold</span>(long, lat, altitude)</span>
-<span id="cb68-17"><a href="#cb68-17"></a></span>
-<span id="cb68-18"><a href="#cb68-18"></a>austria <span class="ot">&lt;-</span> rnaturalearth<span class="sc">::</span><span class="fu">ne_countries</span>(<span class="at">returnclass =</span> <span class="st">"sf"</span>, <span class="at">scale =</span> <span class="st">"medium"</span>) <span class="sc">%&gt;%</span> <span class="fu">filter</span>(name <span class="sc">==</span> <span class="st">"Austria"</span>) <span class="sc">%&gt;%</span> <span class="fu">pull</span>(geometry)</span>
-<span id="cb68-19"><a href="#cb68-19"></a></span>
-<span id="cb68-20"><a href="#cb68-20"></a>cb_glyph <span class="sc">%&gt;%</span> </span>
-<span id="cb68-21"><a href="#cb68-21"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x_major =</span> long, <span class="at">x_minor =</span> month, <span class="at">y_major =</span> lat, <span class="at">y_minor =</span> tmax, <span class="at">color =</span> altitude ),) <span class="sc">+</span> </span>
-<span id="cb68-22"><a href="#cb68-22"></a>  <span class="fu">geom_sf</span>(<span class="at">data =</span> austria, <span class="at">fill =</span> <span class="st">"grey95"</span>, <span class="at">color =</span> <span class="st">"white"</span>, <span class="at">inherit.aes =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
-<span id="cb68-23"><a href="#cb68-23"></a>  <span class="fu">geom_glyph_box</span>(<span class="at">width =</span> <span class="fl">0.2</span>, <span class="at">height =</span> <span class="fl">0.05</span>) <span class="sc">+</span> </span>
-<span id="cb68-24"><a href="#cb68-24"></a>  <span class="fu">geom_glyph</span>(<span class="at">width =</span> <span class="fl">0.2</span>, <span class="at">height =</span> <span class="fl">0.05</span>) <span class="sc">+</span> </span>
-<span id="cb68-25"><a href="#cb68-25"></a>  ggthemes<span class="sc">::</span><span class="fu">theme_map</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb72"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1"></a><span class="fu">library</span>(cubble)</span>
+<span id="cb72-2"><a href="#cb72-2"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb72-3"><a href="#cb72-3"></a>ts_raw <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"data/TAG Datensatz_20210101_20221231.csv"</span>))</span>
+<span id="cb72-4"><a href="#cb72-4"></a>ts <span class="ot">&lt;-</span> ts_raw <span class="sc">%&gt;%</span> <span class="fu">set_names</span>(<span class="fu">c</span>(<span class="st">"station"</span>, <span class="st">"time"</span>, <span class="st">"tmax"</span>, <span class="st">"id"</span>)) <span class="sc">%&gt;%</span> <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(id))</span>
+<span id="cb72-5"><a href="#cb72-5"></a></span>
+<span id="cb72-6"><a href="#cb72-6"></a>stations_raw <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"data/TAG Stations-Metadaten.csv"</span>))</span>
+<span id="cb72-7"><a href="#cb72-7"></a>stations <span class="ot">&lt;-</span> stations_raw <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">3</span><span class="sc">:</span><span class="dv">6</span>)) <span class="sc">%&gt;%</span> <span class="fu">set_names</span>(<span class="fu">c</span>(<span class="st">"id"</span>, <span class="st">"name"</span>, <span class="st">"long"</span>, <span class="st">"lat"</span>, <span class="st">"altitude"</span>)) <span class="sc">%&gt;%</span> <span class="fu">filter</span>(id <span class="sc">%in%</span> <span class="fu">unique</span>(ts<span class="sc">$</span>id))</span>
+<span id="cb72-8"><a href="#cb72-8"></a></span>
+<span id="cb72-9"><a href="#cb72-9"></a>cb <span class="ot">&lt;-</span> <span class="fu">as_cubble</span>(</span>
+<span id="cb72-10"><a href="#cb72-10"></a>  <span class="fu">list</span>(<span class="at">spatial =</span> stations, <span class="at">temporal =</span> ts),</span>
+<span id="cb72-11"><a href="#cb72-11"></a>  <span class="at">key =</span> id, <span class="at">index =</span> time, <span class="at">coords =</span> <span class="fu">c</span>(long, lat)</span>
+<span id="cb72-12"><a href="#cb72-12"></a>)</span>
+<span id="cb72-13"><a href="#cb72-13"></a>cb_glyph <span class="ot">&lt;-</span> cb <span class="sc">%&gt;%</span> </span>
+<span id="cb72-14"><a href="#cb72-14"></a>  <span class="fu">filter</span>(<span class="fu">nrow</span>(ts) <span class="sc">==</span> <span class="dv">365</span> <span class="sc">*</span> <span class="dv">2</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb72-15"><a href="#cb72-15"></a>  <span class="fu">face_temporal</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb72-16"><a href="#cb72-16"></a>  <span class="fu">group_by</span>(<span class="at">month =</span> lubridate<span class="sc">::</span><span class="fu">month</span>(time)) <span class="sc">%&gt;%</span> </span>
+<span id="cb72-17"><a href="#cb72-17"></a>  <span class="fu">summarise</span>(<span class="at">tmax =</span> <span class="fu">mean</span>(tmax, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb72-18"><a href="#cb72-18"></a>  <span class="fu">unfold</span>(long, lat, altitude)</span>
+<span id="cb72-19"><a href="#cb72-19"></a></span>
+<span id="cb72-20"><a href="#cb72-20"></a>austria <span class="ot">&lt;-</span> rnaturalearth<span class="sc">::</span><span class="fu">ne_countries</span>(<span class="at">returnclass =</span> <span class="st">"sf"</span>, <span class="at">scale =</span> <span class="st">"medium"</span>) <span class="sc">%&gt;%</span> <span class="fu">filter</span>(name <span class="sc">==</span> <span class="st">"Austria"</span>) <span class="sc">%&gt;%</span> <span class="fu">pull</span>(geometry)</span>
+<span id="cb72-21"><a href="#cb72-21"></a></span>
+<span id="cb72-22"><a href="#cb72-22"></a>cb_glyph <span class="sc">%&gt;%</span> </span>
+<span id="cb72-23"><a href="#cb72-23"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x_major =</span> long, <span class="at">x_minor =</span> month, <span class="at">y_major =</span> lat, <span class="at">y_minor =</span> tmax, <span class="at">color =</span> altitude ),) <span class="sc">+</span> </span>
+<span id="cb72-24"><a href="#cb72-24"></a>  <span class="fu">geom_sf</span>(<span class="at">data =</span> austria, <span class="at">fill =</span> <span class="st">"grey90"</span>, <span class="at">color =</span> <span class="st">"white"</span>, <span class="at">inherit.aes =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb72-25"><a href="#cb72-25"></a>  <span class="fu">geom_glyph_box</span>(<span class="at">width =</span> <span class="fl">0.2</span>, <span class="at">height =</span> <span class="fl">0.05</span>) <span class="sc">+</span> </span>
+<span id="cb72-26"><a href="#cb72-26"></a>  <span class="fu">geom_glyph</span>(<span class="at">width =</span> <span class="fl">0.2</span>, <span class="at">height =</span> <span class="fl">0.05</span>) <span class="sc">+</span> </span>
+<span id="cb72-27"><a href="#cb72-27"></a>  ggthemes<span class="sc">::</span><span class="fu">theme_map</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 
 </div>
-<img data-src="index_files/figure-revealjs/unnamed-chunk-53-1.png" width="960" class="r-stretch quarto-figure-center"></section>
-<section id="your-time" class="slide level2">
-<h2>Your Time</h2>
-<ol type="1">
-<li><p>Create a cubble object from the spatial and temporal data given</p></li>
-<li><p>Perform an operation on the space in the nested form</p></li>
-<li><p>Switch to the long form to summarise the temporal data</p></li>
-<li><p>Make a glyph map!</p></li>
-</ol>
-</section>
+<img data-src="index_files/figure-revealjs/unnamed-chunk-62-1.png" width="960" class="r-stretch quarto-figure-center"></section>
 <section id="further-reading" class="slide level2">
 <h2>Further reading</h2>
 <ul>
@@ -1557,7 +1715,7 @@ POINT (150.9291 -34.3691)</code></pre>
 <h2>Acknowledgements</h2>
 <ul>
 <li><p>The slides are made with <a href="https://quarto.org/">Quarto</a></p></li>
-<li><p>All the materials used to prepare the slides are available at <a href="sherryzhang-rladiesvienna2023.netlify.app">sherryzhang-rladiesvienna2023.netlify.app</a></p></li>
+<li><p>All the materials used to prepare the slides are available at <a href="https://sherryzhang-rladiesvienna2023.netlify.app" class="uri">https://sherryzhang-rladiesvienna2023.netlify.app</a></p></li>
 </ul>
 <div class="cell" data-layout-align="center">
 
